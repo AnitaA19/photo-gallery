@@ -17,13 +17,18 @@ const MainPage: React.FC = () => {
   };
 
   const handleResetToPopular = () => {
-    setSearchQuery("");
-    setIsPopular(true); 
+    setSearchQuery("");  
+    setIsPopular(true);  
   };
 
   return (
     <div>
-      <Header onSearch={handleSearch} onReset={handleResetToPopular} />
+      <Header 
+        onSearch={handleSearch} 
+        onReset={handleResetToPopular} 
+        searchQuery={searchQuery}   
+        setSearchQuery={setSearchQuery} 
+      />
       <PopularPhotos searchQuery={isPopular ? "" : searchQuery} />
     </div>
   );

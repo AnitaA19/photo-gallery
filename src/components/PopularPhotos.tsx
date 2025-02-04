@@ -22,6 +22,7 @@ interface State {
   selectedPhoto: Photo | null;
   pageNumber: number;
   loading: boolean;
+  hasMore: boolean;
 }
 
 type Action =
@@ -29,13 +30,16 @@ type Action =
   | { type: "ADD_PHOTOS"; payload: Photo[] }
   | { type: "SET_SELECTED_PHOTO"; payload: Photo | null }
   | { type: "INCREMENT_PAGE" }
-  | { type: "SET_LOADING"; payload: boolean };
+  | { type: "SET_LOADING"; payload: boolean }
+  | { type: "SET_HAS_MORE"; payload: boolean }
+  | { type: "RESET_STATE" };
 
 const initialState: State = {
   photos: [],
   selectedPhoto: null,
   pageNumber: 1,
   loading: false,
+  hasMore: true,
 };
 
 function reducer(state: State, action: Action): State {
@@ -50,6 +54,10 @@ function reducer(state: State, action: Action): State {
       return { ...state, pageNumber: state.pageNumber + 1 };
     case "SET_LOADING":
       return { ...state, loading: action.payload };
+    case "SET_HAS_MORE":
+      return { ...state, hasMore: action.payload };
+    case "RESET_STATE":
+      return initialState;
     default:
       return state;
   }
@@ -58,9 +66,12 @@ function reducer(state: State, action: Action): State {
 const PopularPhotos: React.FC<PopularPhotosProps> = ({ searchQuery }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const cache = useRef<{ [key: string]: Photo[] }>({});
+  const isMainPage = !searchQuery;
 
   useEffect(() => {
     async function fetchData() {
+      if (isMainPage && state.pageNumber > 1) return;
+
       const cacheKey = `${searchQuery}-${state.pageNumber}`;
       if (cache.current[cacheKey]) {
         dispatch({ type: "SET_PHOTOS", payload: cache.current[cacheKey] });
@@ -70,8 +81,8 @@ const PopularPhotos: React.FC<PopularPhotosProps> = ({ searchQuery }) => {
       try {
         dispatch({ type: "SET_LOADING", payload: true });
         const endpoint = searchQuery
-        ? `/search/photos?query=${searchQuery}&page=${state.pageNumber}`
-        : `/photos?order_by=popular&page=1&per_page=20`;   
+          ? `/search/photos?query=${searchQuery}&page=${state.pageNumber}`
+          : `/photos?order_by=popular&page=1`;
 
         const response = await fetch(
           `${import.meta.env.VITE_REACT_APP_API_URL}${endpoint}&per_page=20`,
@@ -88,12 +99,14 @@ const PopularPhotos: React.FC<PopularPhotosProps> = ({ searchQuery }) => {
 
         const data = await response.json();
         const results = searchQuery ? data.results : data;
+        
         if (state.pageNumber === 1) {
           dispatch({ type: "SET_PHOTOS", payload: results });
         } else {
           dispatch({ type: "ADD_PHOTOS", payload: results });
         }
 
+        dispatch({ type: "SET_HAS_MORE", payload: results.length === 20 });
         cache.current[cacheKey] = results;
       } catch (error) {
         console.error("Error fetching photos:", error);
@@ -103,30 +116,29 @@ const PopularPhotos: React.FC<PopularPhotosProps> = ({ searchQuery }) => {
     }
 
     fetchData();
-  }, [searchQuery, state.pageNumber]);
+  }, [searchQuery, state.pageNumber, isMainPage]);
 
   useEffect(() => {
-    if (!searchQuery) return; 
-  
     function handleScroll() {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight && !state.loading) {
+      if (isMainPage) return;
+      
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+
+      if (scrollTop + clientHeight >= scrollHeight - 100 && !state.loading && state.hasMore) {
         dispatch({ type: "INCREMENT_PAGE" });
       }
     }
-  
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [state.loading, searchQuery]);
-  
+
+    if (!isMainPage) {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [state.loading, state.hasMore, isMainPage]);
 
   useEffect(() => {
-    const cacheKey = `${searchQuery}-1`;
-    if (cache.current[cacheKey]) {
-      dispatch({ type: "SET_PHOTOS", payload: cache.current[cacheKey] });
-    } else {
-      dispatch({ type: "SET_PHOTOS", payload: [] });
-    }
+    dispatch({ type: "RESET_STATE" });
   }, [searchQuery]);
 
   async function fetchPhotoDetails(photo: Photo) {
@@ -162,7 +174,6 @@ const PopularPhotos: React.FC<PopularPhotosProps> = ({ searchQuery }) => {
       console.error("Error to fetch photos", error);
     }
   }
-  
 
   return (
     <div className={styles.container}>

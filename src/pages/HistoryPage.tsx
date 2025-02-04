@@ -14,7 +14,12 @@ const HistoryPage: React.FC = () => {
 
 	return (
 		<div>
-			<Header onSearch={(query: string) => setSelectedQuery(query)} onReset={handleReset} />
+			<Header 
+				searchQuery={selectedQuery} 
+				setSearchQuery={setSelectedQuery} 
+				onSearch={(query: string) => setSelectedQuery(query)} 
+				onReset={handleReset} 
+			/>
 			
 			<div className={styles.historyContainer}>
 				<div className={styles.searchHistory}>
