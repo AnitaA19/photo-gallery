@@ -1,0 +1,174 @@
+.container {
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 1200px;
+  min-height: 100vh;
+}
+
+.primaryText {
+  font-size: 2.5rem;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  font-weight: 800;
+  color: #2d3436;
+  margin: 0 0 2.5rem 0;
+  letter-spacing: -0.5px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.primaryText:hover {
+  transform: translateY(-2px) scale(1.01);
+  color: #6c5ce7;
+}
+
+.primaryText::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(45deg, #6c5ce7, #a66efa, #fd79a8);
+  transform: scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: right;
+  border-radius: 2px;
+}
+
+.primaryText:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 0.5rem;
+}
+.photoCard {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.photoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+.photoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.photoCard:hover .photoImage {
+  transform: scale(1.05);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  position: relative;
+  width: min(90vw, 850px);
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(0.9);
+  opacity: 0;
+  animation: scaleIn 0.3s ease 0.1s forwards;
+}
+
+@keyframes scaleIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fullImage {
+  width: 100%;
+  height: auto;
+  max-height: 65vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.photoStats {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: none;
+  background: #ff4757;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background: #e84118;
+  transform: scale(1.1);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 640px) {
+  .modalContent {
+    padding: 1.5rem;
+    width: 95vw;
+  }
+
+  .photoStats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fullImage {
+    max-height: 55vh;
+  }
+}
