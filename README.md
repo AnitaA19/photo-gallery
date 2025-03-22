@@ -17,14 +17,11 @@ Vite – Fast development and build tool
 ESLint – Code linting
 
 🎥 Demo
-🔗 Live Demo ((https://photogallerydeploy.netlify.app/))
+🔗 Live Demo [Try Here](https://photogallerydeploy.netlify.app/)
 
 📦 Installation
 Follow these steps to run the project locally:
 
-bash
-Копировать
-Редактировать
 # Clone the repository  
 git clone https://github.com/AnitaA19/photo-gallery.git  
 
