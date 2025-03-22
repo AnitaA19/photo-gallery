@@ -1,3 +1,42 @@
+📸 Photo Gallery
+A modern photo gallery application built with React, TypeScript, and Vite. The app supports infinite scrolling, allowing users to browse a collection of images seamlessly.
+
+🚀 Features
+✅ Infinite scrolling for smooth image loading
+✅ Responsive design for mobile and desktop
+✅ Optimized performance using Vite
+✅ TypeScript for better code maintainability
+
+🛠 Tech Stack
+React – UI framework
+
+TypeScript – Type safety
+
+Vite – Fast development and build tool
+
+ESLint – Code linting
+
+🎥 Demo
+🔗 Live Demo (Добавь ссылку на деплой, например Vercel/Netlify)
+
+📦 Installation
+Follow these steps to run the project locally:
+
+bash
+Копировать
+Редактировать
+# Clone the repository  
+git clone https://github.com/AnitaA19/photo-gallery.git  
+
+# Navigate to the project folder  
+cd photo-gallery  
+
+# Install dependencies  
+npm install  
+
+# Start the development server  
+npm run dev  
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
