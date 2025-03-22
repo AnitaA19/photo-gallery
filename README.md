@@ -17,7 +17,7 @@ Vite – Fast development and build tool
 ESLint – Code linting
 
 🎥 Demo
-🔗 Live Demo (Добавь ссылку на деплой, например Vercel/Netlify)
+🔗 Live Demo ((https://photogallerydeploy.netlify.app/))
 
 📦 Installation
 Follow these steps to run the project locally:
